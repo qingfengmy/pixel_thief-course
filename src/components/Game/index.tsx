@@ -2,17 +2,15 @@ import React from "react";
 import { gameMachine } from "../../machines/gameMachine";
 import { useMachine } from "@xstate/react";
 import { Button } from "../Button";
+import { HomeScreen } from "../HomeScreen";
+import { GameOverScreen } from "../GameOverScreen";
+import { GameCompleteScreen } from "../GameCompleteScreen";
 
 export const Game = () => {
   const [state, send] = useMachine(gameMachine);
 
   if (state.matches("home")) {
-    return (
-      <>
-        <p>state: home</p>
-        <Button onClick={() => send("START_BUTTON_CLICKED")}>START_BUTTON_CLICKED</Button>
-      </>
-    );
+    return <HomeScreen onStartButtonClick={() => send("START_BUTTON_CLICKED")} />;
   }
 
   if (state.matches("playing")) {
@@ -26,21 +24,11 @@ export const Game = () => {
   }
 
   if (state.matches("gameOver")) {
-    return (
-      <>
-        <p>state: gameOver</p>
-        <Button onClick={() => send("RESTART_BUTTON_CLICKED")}>RESTART_BUTTON_CLICKED</Button>
-      </>
-    );
+    return <GameOverScreen onRestartButtonClick={() => send("RESTART_BUTTON_CLICKED")} />;
   }
 
   if (state.matches("gameComplete")) {
-    return (
-      <>
-        <p>state: gameComplete</p>
-        <Button onClick={() => send("HOME_BUTTON_CLICKED")}>HOME_BUTTON_CLICKED</Button>
-      </>
-    );
+    return <GameCompleteScreen onGoHomeButtonClick={() => send("HOME_BUTTON_CLICKED")} />;
   }
 
   throw Error(`Unknown game state: ${state.value}`);
