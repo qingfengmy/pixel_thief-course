@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
 import { gameMachine } from "../../machines/gameMachine";
 import { useMachine } from "@xstate/react";
-import { Button } from "../Button";
 import { HomeScreen } from "../HomeScreen";
 import { GameOverScreen } from "../GameOverScreen";
 import { GameCompleteScreen } from "../GameCompleteScreen";
 import { GameEventType } from "../../machines/gameMachine/types";
+import level1BackgroundPng from "../../images/level1Background.png";
+import level2BackgroundPng from "../../images/level2Background.png";
+import level3BackgroundPng from "../../images/level3Background.png";
+import { LevelBackgroundImage } from "../LevelBackgroundImage";
+import { Grid } from "../Grid";
 
 interface PropsType {
     fastForwardEvents?: GameEventType[];
@@ -35,13 +39,11 @@ export const Game = ({ fastForwardEvents }: PropsType) => {
         if (state.matches("playing.level1")) {
             return (
                 <>
-                    <p>state: playing.level1</p>
-                    <Button onClick={() => send("PLAYER_DIED")}>
-                        PLAYER_DIED
-                    </Button>
-                    <Button onClick={() => send("PLAYER_WALKED_THROUGH_DOOR")}>
-                        PLAYER_WALKED_THROUGH_DOOR
-                    </Button>
+                    <LevelBackgroundImage
+                        src={level1BackgroundPng}
+                        alt="Dungeon room"
+                    />
+                    <Grid />
                 </>
             );
         }
@@ -49,13 +51,11 @@ export const Game = ({ fastForwardEvents }: PropsType) => {
         if (state.matches("playing.level2")) {
             return (
                 <>
-                    <p>state: playing.level2</p>
-                    <Button onClick={() => send("PLAYER_DIED")}>
-                        PLAYER_DIED
-                    </Button>
-                    <Button onClick={() => send("PLAYER_WALKED_THROUGH_DOOR")}>
-                        PLAYER_WALKED_THROUGH_DOOR
-                    </Button>
+                    <LevelBackgroundImage
+                        src={level2BackgroundPng}
+                        alt="Dungeon room"
+                    />
+                    <Grid />
                 </>
             );
         }
@@ -63,13 +63,11 @@ export const Game = ({ fastForwardEvents }: PropsType) => {
         if (state.matches("playing.level3")) {
             return (
                 <>
-                    <p>state: playing.level3</p>
-                    <Button onClick={() => send("PLAYER_DIED")}>
-                        PLAYER_DIED
-                    </Button>
-                    <Button onClick={() => send("PLAYER_GOT_TREASURE")}>
-                        PLAYER_GOT_TREASURE
-                    </Button>
+                    <LevelBackgroundImage
+                        src={level3BackgroundPng}
+                        alt="Dungeon room"
+                    />
+                    <Grid />
                 </>
             );
         }
