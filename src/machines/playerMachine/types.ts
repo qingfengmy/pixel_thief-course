@@ -1,8 +1,13 @@
 import { Actor } from "xstate";
+import { CoordsType } from "../../types";
+
+export interface PlayerContextType {
+    coords: CoordsType;
+}
 
 export type PlayerStateType = {
-    context: null;
+    context: PlayerContextType;
     value: `alive` | `dead`;
 };
 
-export type PlayerActorType = Actor;
+export type PlayerActorType = Actor<PlayerContextType>;

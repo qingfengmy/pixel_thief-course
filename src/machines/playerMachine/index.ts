@@ -1,7 +1,15 @@
 import { createMachine } from "xstate";
-import { PlayerStateType } from "./types";
+import { PLAYER_STARTING_COORDS } from "../../constants";
+import { PlayerContextType, PlayerStateType } from "./types";
 
-export const playerMachine = createMachine<null, any, PlayerStateType>({
+export const playerMachine = createMachine<
+    PlayerContextType,
+    any,
+    PlayerStateType
+>({
+    context: {
+        coords: PLAYER_STARTING_COORDS,
+    },
     id: `player`,
     initial: `alive`,
     states: {
