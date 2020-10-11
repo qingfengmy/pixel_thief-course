@@ -10,6 +10,7 @@ import level2BackgroundPng from "../../images/level2Background.png";
 import level3BackgroundPng from "../../images/level3Background.png";
 import { LevelBackgroundImage } from "../LevelBackgroundImage";
 import { Grid } from "../Grid";
+import { Player } from "../Player";
 
 interface PropsType {
     fastForwardEvents?: GameEventType[];
@@ -17,6 +18,7 @@ interface PropsType {
 
 export const Game = ({ fastForwardEvents }: PropsType) => {
     const [state, send] = useMachine(gameMachine);
+    const { playerActor } = state.children;
 
     useEffect(() => {
         // note: batching events doesn't work at time of writing
@@ -43,7 +45,7 @@ export const Game = ({ fastForwardEvents }: PropsType) => {
                         src={level1BackgroundPng}
                         alt="Dungeon room"
                     />
-                    <Grid />
+                    <Grid>{playerActor && <Player actor={playerActor} />}</Grid>
                 </>
             );
         }
@@ -55,7 +57,7 @@ export const Game = ({ fastForwardEvents }: PropsType) => {
                         src={level2BackgroundPng}
                         alt="Dungeon room"
                     />
-                    <Grid />
+                    <Grid>{playerActor && <Player actor={playerActor} />}</Grid>
                 </>
             );
         }
@@ -67,7 +69,7 @@ export const Game = ({ fastForwardEvents }: PropsType) => {
                         src={level3BackgroundPng}
                         alt="Dungeon room"
                     />
-                    <Grid />
+                    <Grid>{playerActor && <Player actor={playerActor} />}</Grid>
                 </>
             );
         }
