@@ -1,8 +1,9 @@
 import { createMachine } from "xstate";
 import { PLAYER_STARTING_COORDS } from "../../constants";
-import { assign, choose } from "xstate/lib/actions";
+import { assign, choose, sendParent } from "xstate/lib/actions";
 import { getTargetCoords } from "../../util/getTargetCoords";
 import { isCoordsOnGrid } from "../../util/isCoordsOnGrid";
+import { PlayerMovedType } from "../gameMachine/types";
 import {
     ArrowButtonClickedType,
     PlayerContextType,
@@ -27,6 +28,9 @@ export const playerMachine = createMachine<
                     ARROW_BUTTON_CLICKED: {
                         actions: `onArrowButtonClick`,
                     },
+                    RESET_PLAYER_COORDS: {
+                        actions: `resetCoords`,
+                    },
                 },
             },
             dead: {},
@@ -37,9 +41,21 @@ export const playerMachine = createMachine<
             onArrowButtonClick: choose([
                 {
                     cond: `isSquareAvailable`,
-                    actions: `move`,
+                    actions: [`move`, `broadcastPlayerMoved`],
                 },
             ]),
+            resetCoords: assign<PlayerContextType>(() => ({
+                coords: PLAYER_STARTING_COORDS,
+            })) as any,
+            broadcastPlayerMoved: sendParent((context) => {
+                const { coords } = context;
+                const event: PlayerMovedType = {
+                    type: "PLAYER_MOVED",
+                    coords,
+                };
+
+                return event;
+            }),
             move: assign<PlayerContextType, ArrowButtonClickedType>(
                 (context, event) => {
                     const { coords } = context;

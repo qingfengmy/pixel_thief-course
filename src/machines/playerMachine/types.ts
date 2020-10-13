@@ -15,6 +15,10 @@ export type ArrowButtonClickedType = {
     type: "ARROW_BUTTON_CLICKED";
 };
 
-export type PlayerEventType = ArrowButtonClickedType;
+export type ResetPlayerCoordsType = {
+    type: "RESET_PLAYER_COORDS";
+};
+
+export type PlayerEventType = ArrowButtonClickedType | ResetPlayerCoordsType;
 
 export type PlayerActorType = Actor<PlayerContextType, PlayerEventType>;

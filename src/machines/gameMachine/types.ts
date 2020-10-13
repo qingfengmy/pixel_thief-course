@@ -1,3 +1,5 @@
+import { CoordsType } from "../../types";
+
 export interface StartButtonClickedType {
     type: `START_BUTTON_CLICKED`;
 }
@@ -22,13 +24,19 @@ export interface PlayerWalkedThroughDoorType {
     type: `PLAYER_WALKED_THROUGH_DOOR`;
 }
 
+export interface PlayerMovedType {
+    coords: CoordsType;
+    type: `PLAYER_MOVED`;
+}
+
 export type GameEventType =
     | StartButtonClickedType
     | PlayerDiedType
     | PlayerGotTreasureType
     | RestartButtonClickedType
     | HomeButtonClickedType
-    | PlayerWalkedThroughDoorType;
+    | PlayerWalkedThroughDoorType
+    | PlayerMovedType;
 
 export type GameStateType = {
     context: null;

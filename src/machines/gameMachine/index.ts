@@ -1,6 +1,9 @@
-import { createMachine } from "xstate";
+import { createMachine, send } from "xstate";
 import { GameEventType, GameStateType } from "./types";
 import { playerMachine } from "../playerMachine";
+import { isEqual } from "lodash";
+import { DOOR_COORDS } from "../../constants";
+import { choose } from "xstate/lib/actions";
 
 export const gameMachine = createMachine<null, GameEventType, GameStateType>(
     {
@@ -26,9 +29,13 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
                     level1: {
                         on: {
                             PLAYER_WALKED_THROUGH_DOOR: "level2",
+                            PLAYER_MOVED: {
+                                actions: `onPlayerMoved`,
+                            },
                         },
                     },
                     level2: {
+                        entry: `resetPlayerCoords`,
                         on: {
                             PLAYER_WALKED_THROUGH_DOOR: "level3",
                         },
@@ -49,6 +56,28 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
         },
     },
     {
+        actions: {
+            onPlayerMoved: choose([
+                {
+                    cond: `isPlayerAtDoor`,
+                    actions: `playerWalkedThroughDoor`,
+                },
+            ]),
+            playerWalkedThroughDoor: send("PLAYER_WALKED_THROUGH_DOOR"),
+            resetPlayerCoords: send("RESET_PLAYER_COORDS", {
+                to: `playerActor`,
+            }),
+        },
+        guards: {
+            isPlayerAtDoor: (_, event) => {
+                if (event.type === "PLAYER_MOVED") {
+                    const { coords } = event;
+                    return isEqual(coords, DOOR_COORDS);
+                }
+
+                return false;
+            },
+        },
         services: {
             playerMachine,
         },
