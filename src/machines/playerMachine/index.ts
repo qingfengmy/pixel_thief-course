@@ -1,10 +1,11 @@
 import { createMachine } from "xstate";
 import { PLAYER_STARTING_COORDS } from "../../constants";
-import { PlayerContextType, PlayerStateType } from "./types";
+import { log } from "xstate/lib/actions";
+import { PlayerContextType, PlayerEventType, PlayerStateType } from "./types";
 
 export const playerMachine = createMachine<
     PlayerContextType,
-    any,
+    PlayerEventType,
     PlayerStateType
 >({
     context: {
@@ -13,7 +14,13 @@ export const playerMachine = createMachine<
     id: `player`,
     initial: `alive`,
     states: {
-        alive: {},
+        alive: {
+            on: {
+                ARROW_BUTTON_CLICKED: {
+                    actions: log(),
+                },
+            },
+        },
         dead: {},
     },
 });

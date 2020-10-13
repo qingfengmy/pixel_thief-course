@@ -1,10 +1,15 @@
 import React from "react";
 import { useActor } from "@xstate/react";
-// import { PlayerActorType } from "../../machines/playerMachine/types";
 import thiefGif from "../../images/thief.gif";
+import {
+    ArrowButtonClickedType,
+    // PlayerActorType,
+} from "../../machines/playerMachine/types";
 import { Image } from "../Image";
 import styled from "styled-components";
 import { coordsToPosition } from "../../util/coordsToPosition";
+import { usePlayerControls } from "../../hooks/usePlayerControls";
+import { DirectionType } from "../../types";
 
 const Layout = styled.div`
     position: absolute;
@@ -18,6 +23,29 @@ export const Player = ({ actor }: PropsType) => {
     const [state, send] = useActor(actor);
     const { coords } = state.context;
     const position = coordsToPosition(coords);
+
+    usePlayerControls({
+        handleArrowUp: () =>
+            send({
+                type: "ARROW_BUTTON_CLICKED",
+                direction: DirectionType.Up,
+            } as ArrowButtonClickedType),
+        handleArrowDown: () =>
+            send({
+                type: "ARROW_BUTTON_CLICKED",
+                direction: DirectionType.Down,
+            } as ArrowButtonClickedType),
+        handleArrowLeft: () =>
+            send({
+                type: "ARROW_BUTTON_CLICKED",
+                direction: DirectionType.Left,
+            } as ArrowButtonClickedType),
+        handleArrowRight: () =>
+            send({
+                type: "ARROW_BUTTON_CLICKED",
+                direction: DirectionType.Right,
+            } as ArrowButtonClickedType),
+    });
 
     return (
         <Layout style={{ top: position[1], left: position[0] }}>

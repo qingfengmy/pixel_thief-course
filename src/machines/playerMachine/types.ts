@@ -1,5 +1,5 @@
 import { Actor } from "xstate";
-import { CoordsType } from "../../types";
+import { CoordsType, DirectionType } from "../../types";
 
 export interface PlayerContextType {
     coords: CoordsType;
@@ -10,4 +10,11 @@ export type PlayerStateType = {
     value: `alive` | `dead`;
 };
 
-export type PlayerActorType = Actor<PlayerContextType>;
+export type ArrowButtonClickedType = {
+    direction: DirectionType;
+    type: "ARROW_BUTTON_CLICKED";
+};
+
+export type PlayerEventType = ArrowButtonClickedType;
+
+export type PlayerActorType = Actor<PlayerContextType, PlayerEventType>;
