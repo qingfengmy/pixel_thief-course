@@ -38,9 +38,14 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
                         entry: `resetPlayerCoords`,
                         on: {
                             PLAYER_WALKED_THROUGH_DOOR: "level3",
+                            PLAYER_MOVED: {
+                                actions: `onPlayerMoved`,
+                            },
                         },
                     },
-                    level3: {},
+                    level3: {
+                        entry: `resetPlayerCoords`,
+                    },
                 },
             },
             gameOver: {
