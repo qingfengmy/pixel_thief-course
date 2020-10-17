@@ -3,6 +3,7 @@ import { CoordsType, DirectionType } from "../../types";
 
 export interface PlayerContextType {
     coords: CoordsType;
+    health: number;
 }
 
 export type PlayerStateType = {
