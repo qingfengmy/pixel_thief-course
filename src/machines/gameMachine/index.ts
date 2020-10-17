@@ -1,4 +1,4 @@
-import { createMachine, send } from "xstate";
+import { createMachine, forwardTo, send } from "xstate";
 import { GameEventType, GameStateType } from "./types";
 import { playerMachine } from "../playerMachine";
 import { isEqual } from "lodash";
@@ -77,6 +77,10 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
                     cond: `isPlayerAtDoor`,
                     actions: `playerWalkedThroughDoor`,
                 },
+                {
+                    cond: `isMonster`,
+                    actions: `forwardToMonster`,
+                },
             ]),
             onPlayerMovedFinalLevel: choose([
                 {
@@ -89,8 +93,11 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
                 to: `playerActor`,
             }),
             playerGotTreasure: send("PLAYER_GOT_TREASURE"),
+            forwardToMonster: forwardTo(`monsterActor`),
         },
         guards: {
+            isMonster: (context, event, condMeta) =>
+                !!condMeta.state.children.monsterActor,
             isPlayerAtDoor: (_, event) => {
                 if (event.type === "PLAYER_MOVED") {
                     const { coords } = event;
