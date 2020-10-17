@@ -2,8 +2,8 @@ import { createMachine, send } from "xstate";
 import { GameEventType, GameStateType } from "./types";
 import { playerMachine } from "../playerMachine";
 import { isEqual } from "lodash";
-import { DOOR_COORDS } from "../../constants";
 import { choose } from "xstate/lib/actions";
+import { DOOR_COORDS, TREASURE_COORDS } from "../../constants";
 
 export const gameMachine = createMachine<null, GameEventType, GameStateType>(
     {
@@ -45,6 +45,11 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
                     },
                     level3: {
                         entry: `resetPlayerCoords`,
+                        on: {
+                            PLAYER_MOVED: {
+                                actions: `onPlayerMovedFinalLevel`,
+                            },
+                        },
                     },
                 },
             },
@@ -68,16 +73,31 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
                     actions: `playerWalkedThroughDoor`,
                 },
             ]),
+            onPlayerMovedFinalLevel: choose([
+                {
+                    cond: `isPlayerAtTreasure`,
+                    actions: `playerGotTreasure`,
+                },
+            ]),
             playerWalkedThroughDoor: send("PLAYER_WALKED_THROUGH_DOOR"),
             resetPlayerCoords: send("RESET_PLAYER_COORDS", {
                 to: `playerActor`,
             }),
+            playerGotTreasure: send("PLAYER_GOT_TREASURE"),
         },
         guards: {
             isPlayerAtDoor: (_, event) => {
                 if (event.type === "PLAYER_MOVED") {
                     const { coords } = event;
                     return isEqual(coords, DOOR_COORDS);
+                }
+
+                return false;
+            },
+            isPlayerAtTreasure: (_, event) => {
+                if (event.type === "PLAYER_MOVED") {
+                    const { coords } = event;
+                    return isEqual(coords, TREASURE_COORDS);
                 }
 
                 return false;

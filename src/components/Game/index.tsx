@@ -11,6 +11,7 @@ import level3BackgroundPng from "../../images/level3Background.png";
 import { LevelBackgroundImage } from "../LevelBackgroundImage";
 import { Grid } from "../Grid";
 import { Player } from "../Player";
+import { Treasure } from "../Treasure";
 
 interface PropsType {
     fastForwardEvents?: GameEventType[];
@@ -69,7 +70,10 @@ export const Game = ({ fastForwardEvents }: PropsType) => {
                         src={level3BackgroundPng}
                         alt="Dungeon room"
                     />
-                    <Grid>{playerActor && <Player actor={playerActor} />}</Grid>
+                    <Grid>
+                        {playerActor && <Player actor={playerActor} />}
+                        <Treasure />
+                    </Grid>
                 </>
             );
         }
