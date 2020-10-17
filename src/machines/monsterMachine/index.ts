@@ -1,6 +1,6 @@
 import { isEqual } from "lodash";
 import { assign, createMachine } from "xstate";
-import { choose, log } from "xstate/lib/actions";
+import { choose, sendParent } from "xstate/lib/actions";
 import { CoordsType } from "../../types";
 import { PlayerMovedType } from "../gameMachine/types";
 import {
@@ -71,7 +71,7 @@ export const monsterMachine = createMachine<
                     cond: `isMonsterPlayerCoordsEqual`,
                 },
             ]),
-            attack: log(`attack`),
+            attack: sendParent("ATTACK_PLAYER"),
         },
         guards: {
             isMonsterPlayerCoordsEqual: (context, event) =>

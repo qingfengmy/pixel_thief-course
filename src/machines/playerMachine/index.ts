@@ -1,5 +1,5 @@
 import { createMachine } from "xstate";
-import { assign, choose, sendParent } from "xstate/lib/actions";
+import { assign, choose, sendParent, log } from "xstate/lib/actions";
 import {
     PLAYER_STARTING_COORDS,
     PLAYER_STARTING_HEALTH,
@@ -34,6 +34,9 @@ export const playerMachine = createMachine<
                     },
                     RESET_PLAYER_COORDS: {
                         actions: `resetCoords`,
+                    },
+                    ATTACK_PLAYER: {
+                        actions: log(),
                     },
                 },
             },

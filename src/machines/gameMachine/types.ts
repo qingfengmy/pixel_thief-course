@@ -29,6 +29,10 @@ export interface PlayerMovedType {
     type: `PLAYER_MOVED`;
 }
 
+export interface AttackPlayerType {
+    type: `ATTACK_PLAYER`;
+}
+
 export type GameEventType =
     | StartButtonClickedType
     | PlayerDiedType
@@ -36,7 +40,8 @@ export type GameEventType =
     | RestartButtonClickedType
     | HomeButtonClickedType
     | PlayerWalkedThroughDoorType
-    | PlayerMovedType;
+    | PlayerMovedType
+    | AttackPlayerType;
 
 export type GameStateType = {
     context: null;

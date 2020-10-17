@@ -1,5 +1,6 @@
 import { Actor } from "xstate";
 import { CoordsType, DirectionType } from "../../types";
+import { AttackPlayerType } from "../gameMachine/types";
 
 export interface PlayerContextType {
     coords: CoordsType;
@@ -20,6 +21,9 @@ export type ResetPlayerCoordsType = {
     type: "RESET_PLAYER_COORDS";
 };
 
-export type PlayerEventType = ArrowButtonClickedType | ResetPlayerCoordsType;
+export type PlayerEventType =
+    | ArrowButtonClickedType
+    | ResetPlayerCoordsType
+    | AttackPlayerType;
 
 export type PlayerActorType = Actor<PlayerContextType, PlayerEventType>;

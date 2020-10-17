@@ -46,6 +46,9 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
                             PLAYER_MOVED: {
                                 actions: `onPlayerMoved`,
                             },
+                            ATTACK_PLAYER: {
+                                actions: "forwardToPlayer",
+                            },
                         },
                     },
                     level3: {
@@ -94,6 +97,7 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
             }),
             playerGotTreasure: send("PLAYER_GOT_TREASURE"),
             forwardToMonster: forwardTo(`monsterActor`),
+            forwardToPlayer: forwardTo(`playerActor`),
         },
         guards: {
             isMonster: (context, event, condMeta) =>
