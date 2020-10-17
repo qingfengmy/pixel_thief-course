@@ -9,7 +9,7 @@ export interface PlayerContextType {
 
 export type PlayerStateType = {
     context: PlayerContextType;
-    value: `alive` | `dead`;
+    value: `alive` | `dead` | `determining`;
 };
 
 export type ArrowButtonClickedType = {
