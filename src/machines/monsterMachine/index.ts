@@ -1,4 +1,6 @@
+import { isEqual } from "lodash";
 import { assign, createMachine } from "xstate";
+import { choose, log } from "xstate/lib/actions";
 import { CoordsType } from "../../types";
 import { PlayerMovedType } from "../gameMachine/types";
 import {
@@ -26,11 +28,12 @@ export const monsterMachine = createMachine<
         initial: `up`,
         on: {
             PLAYER_MOVED: {
-                actions: `storePlayerCoords`,
+                actions: [`storePlayerCoords`, `attemptAttack`],
             },
         },
         states: {
             up: {
+                entry: `attemptAttack`,
                 after: {
                     2000: {
                         actions: `moveDown`,
@@ -39,6 +42,7 @@ export const monsterMachine = createMachine<
                 },
             },
             down: {
+                entry: `attemptAttack`,
                 after: {
                     2000: {
                         actions: `moveUp`,
@@ -61,6 +65,17 @@ export const monsterMachine = createMachine<
                     playerCoords: event.coords,
                 })
             ),
+            attemptAttack: choose([
+                {
+                    actions: `attack`,
+                    cond: `isMonsterPlayerCoordsEqual`,
+                },
+            ]),
+            attack: log(`attack`),
+        },
+        guards: {
+            isMonsterPlayerCoordsEqual: (context, event) =>
+                isEqual(context.coords, context.playerCoords),
         },
     }
 );
