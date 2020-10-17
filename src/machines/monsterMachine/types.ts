@@ -7,7 +7,7 @@ export interface MonsterContextType {
 
 export type MonsterStateType = {
     context: MonsterContextType;
-    value: `active`;
+    value: `up` | `down`;
 };
 
 export type MonsterActorType =
