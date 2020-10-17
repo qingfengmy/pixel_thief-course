@@ -12,6 +12,8 @@ import { LevelBackgroundImage } from "../LevelBackgroundImage";
 import { Grid } from "../Grid";
 import { Player } from "../Player";
 import { Treasure } from "../Treasure";
+import { Monster } from "../Monster";
+import { MonsterActorType } from "../../machines/monsterMachine/types";
 
 interface PropsType {
     fastForwardEvents?: GameEventType[];
@@ -19,7 +21,7 @@ interface PropsType {
 
 export const Game = ({ fastForwardEvents }: PropsType) => {
     const [state, send] = useMachine(gameMachine);
-    const { playerActor } = state.children;
+    const { monsterActor, playerActor } = state.children;
 
     useEffect(() => {
         // note: batching events doesn't work at time of writing
@@ -58,7 +60,12 @@ export const Game = ({ fastForwardEvents }: PropsType) => {
                         src={level2BackgroundPng}
                         alt="Dungeon room"
                     />
-                    <Grid>{playerActor && <Player actor={playerActor} />}</Grid>
+                    <Grid>
+                        {playerActor && <Player actor={playerActor} />}
+                        {monsterActor && (
+                            <Monster actor={monsterActor as MonsterActorType} />
+                        )}
+                    </Grid>
                 </>
             );
         }

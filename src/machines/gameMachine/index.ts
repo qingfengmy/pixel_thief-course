@@ -4,6 +4,7 @@ import { playerMachine } from "../playerMachine";
 import { isEqual } from "lodash";
 import { choose } from "xstate/lib/actions";
 import { DOOR_COORDS, TREASURE_COORDS } from "../../constants";
+import { monsterMachine } from "../monsterMachine";
 
 export const gameMachine = createMachine<null, GameEventType, GameStateType>(
     {
@@ -35,6 +36,10 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
                         },
                     },
                     level2: {
+                        invoke: {
+                            id: `monsterActor`,
+                            src: `monsterMachine`,
+                        },
                         entry: `resetPlayerCoords`,
                         on: {
                             PLAYER_WALKED_THROUGH_DOOR: "level3",
@@ -104,6 +109,7 @@ export const gameMachine = createMachine<null, GameEventType, GameStateType>(
             },
         },
         services: {
+            monsterMachine,
             playerMachine,
         },
     }
