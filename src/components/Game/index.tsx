@@ -14,6 +14,7 @@ import { Player } from "../Player";
 import { Treasure } from "../Treasure";
 import { Monster } from "../Monster";
 import { MonsterActorType } from "../../machines/monsterMachine/types";
+import { ScreenTransition } from "../ScreenTransition";
 
 interface PropsType {
     fastForwardEvents?: GameEventType[];
@@ -32,75 +33,87 @@ export const Game = ({ fastForwardEvents }: PropsType) => {
         }
     }, [fastForwardEvents, send]);
 
-    if (state.matches("home")) {
-        return (
-            <HomeScreen
-                onStartButtonClick={() => send("START_BUTTON_CLICKED")}
-            />
-        );
-    }
-
-    if (state.matches("playing")) {
-        if (state.matches("playing.level1")) {
+    const Screen = () => {
+        if (state.matches("home")) {
             return (
-                <>
-                    <LevelBackgroundImage
-                        src={level1BackgroundPng}
-                        alt="Dungeon room"
-                    />
-                    <Grid>{playerActor && <Player actor={playerActor} />}</Grid>
-                </>
+                <HomeScreen
+                    onStartButtonClick={() => send("START_BUTTON_CLICKED")}
+                />
             );
         }
 
-        if (state.matches("playing.level2")) {
+        if (state.matches("playing")) {
+            if (state.matches("playing.level1")) {
+                return (
+                    <>
+                        <LevelBackgroundImage
+                            src={level1BackgroundPng}
+                            alt="Dungeon room"
+                        />
+                        <Grid>
+                            {playerActor && <Player actor={playerActor} />}
+                        </Grid>
+                    </>
+                );
+            }
+
+            if (state.matches("playing.level2")) {
+                return (
+                    <>
+                        <LevelBackgroundImage
+                            src={level2BackgroundPng}
+                            alt="Dungeon room"
+                        />
+                        <Grid>
+                            {playerActor && <Player actor={playerActor} />}
+                            {monsterActor && (
+                                <Monster
+                                    actor={monsterActor as MonsterActorType}
+                                />
+                            )}
+                        </Grid>
+                    </>
+                );
+            }
+
+            if (state.matches("playing.level3")) {
+                return (
+                    <>
+                        <LevelBackgroundImage
+                            src={level3BackgroundPng}
+                            alt="Dungeon room"
+                        />
+                        <Grid>
+                            {playerActor && <Player actor={playerActor} />}
+                            <Treasure />
+                        </Grid>
+                    </>
+                );
+            }
+        }
+
+        if (state.matches("gameOver")) {
             return (
-                <>
-                    <LevelBackgroundImage
-                        src={level2BackgroundPng}
-                        alt="Dungeon room"
-                    />
-                    <Grid>
-                        {playerActor && <Player actor={playerActor} />}
-                        {monsterActor && (
-                            <Monster actor={monsterActor as MonsterActorType} />
-                        )}
-                    </Grid>
-                </>
+                <GameOverScreen
+                    onRestartButtonClick={() => send("RESTART_BUTTON_CLICKED")}
+                />
             );
         }
 
-        if (state.matches("playing.level3")) {
+        if (state.matches("gameComplete")) {
             return (
-                <>
-                    <LevelBackgroundImage
-                        src={level3BackgroundPng}
-                        alt="Dungeon room"
-                    />
-                    <Grid>
-                        {playerActor && <Player actor={playerActor} />}
-                        <Treasure />
-                    </Grid>
-                </>
+                <GameCompleteScreen
+                    onGoHomeButtonClick={() => send("HOME_BUTTON_CLICKED")}
+                />
             );
         }
-    }
 
-    if (state.matches("gameOver")) {
-        return (
-            <GameOverScreen
-                onRestartButtonClick={() => send("RESTART_BUTTON_CLICKED")}
-            />
-        );
-    }
+        throw Error(`Unknown game state: ${state.value}`);
+    };
 
-    if (state.matches("gameComplete")) {
-        return (
-            <GameCompleteScreen
-                onGoHomeButtonClick={() => send("HOME_BUTTON_CLICKED")}
-            />
-        );
-    }
-
-    throw Error(`Unknown game state: ${state.value}`);
+    return (
+        <ScreenTransition key={JSON.stringify(state.value)}>
+            <Screen />
+        </ScreenTransition>
+    );
 };
